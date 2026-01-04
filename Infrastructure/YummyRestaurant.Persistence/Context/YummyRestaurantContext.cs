@@ -1,0 +1,22 @@
+using Microsoft.EntityFrameworkCore;
+using YummyRestaurant.Domain.Entities;
+
+namespace YummyRestaurant.Persistence.Context;
+
+public class YummyRestaurantContext : DbContext
+{
+    public YummyRestaurantContext(DbContextOptions<YummyRestaurantContext> options) : base(options)
+    {
+    }
+
+    public DbSet<Booking> Bookings { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Chef> Chefs { get; set; }
+    public DbSet<Contact> Contacts { get; set; }
+    public DbSet<Feature> Features { get; set; }
+    public DbSet<Message> Messages { get; set; }
+    public DbSet<PhotoGallery> PhotoGalleries { get; set; }
+    public DbSet<Product> Products { get; set; }
+    public DbSet<Service> Services { get; set; }
+    public DbSet<Testimonial> Testimonials { get; set; }
+}

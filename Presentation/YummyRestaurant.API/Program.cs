@@ -19,7 +19,7 @@ public class Program
         builder.Services.AddOpenApi();
 
         // Database Context
-        builder.Services.AddDbContext<YummyContext>(options =>
+        builder.Services.AddDbContext<YummyRestaurantContext>(options =>
         {
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
         });

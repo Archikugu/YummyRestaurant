@@ -8,10 +8,10 @@ namespace YummyRestaurant.Persistence.Repositories;
 
 public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 {
-    private readonly YummyContext _context;
+    private readonly YummyRestaurantContext _context;
     private readonly DbSet<T> _dbSet;
 
-    public GenericRepository(YummyContext context)
+    public GenericRepository(YummyRestaurantContext context)
     {
         _context = context;
         _dbSet = _context.Set<T>();

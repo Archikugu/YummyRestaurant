@@ -2,15 +2,13 @@ using YummyRestaurant.Domain.Common;
 
 namespace YummyRestaurant.Domain.Entities;
 
-public class Booking : BaseEntity
+public class Message : BaseEntity
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string FullName => $"{FirstName} {LastName.ToUpper()}";
     public string Email { get; set; }
-    public string PhoneNumber { get; set; }
-    public DateTime ReservationDate { get; set; }
-    public string ReservationTime { get; set; }
-    public byte PersonCount { get; set; }
-    public string Message { get; set; }
+    public string Subject { get; set; }
+    public string MessageContent { get; set; }
+    public bool IsRead { get; set; } = false;
 }
