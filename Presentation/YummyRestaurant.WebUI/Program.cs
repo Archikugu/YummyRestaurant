@@ -3,6 +3,7 @@ using YummyRestaurant.Application.Abstract;
 using YummyRestaurant.Application.Concrete;
 using YummyRestaurant.Persistence.Context;
 using YummyRestaurant.Persistence.Repositories;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,9 @@ builder.Services.AddDbContext<YummyRestaurantContext>(options =>
 // Dependency Injection
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericManager<>));
+
+// AutoMapper
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<YummyRestaurant.Application.Mapping.GeneralMapping>());
 
 var app = builder.Build();
 

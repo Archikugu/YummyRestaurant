@@ -3,6 +3,8 @@ using YummyRestaurant.Application.Abstract;
 using YummyRestaurant.Application.Concrete;
 using YummyRestaurant.Persistence.Context;
 using YummyRestaurant.Persistence.Repositories;
+using Scalar.AspNetCore;
+using AutoMapper;
 
 namespace YummyRestaurant.API;
 
@@ -27,6 +29,9 @@ public class Program
         // Dependency Injection
         builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericManager<>));
+        
+        // AutoMapper
+        builder.Services.AddAutoMapper(cfg => cfg.AddProfile<YummyRestaurant.Application.Mapping.GeneralMapping>());
 
         var app = builder.Build();
 
@@ -34,6 +39,7 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+            app.MapScalarApiReference();
         }
 
         app.UseHttpsRedirection();
