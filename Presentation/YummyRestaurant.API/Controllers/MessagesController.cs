@@ -1,8 +1,12 @@
-using AutoMapper;
+using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using YummyRestaurant.Application.Abstract;
 using YummyRestaurant.Application.DTOs.MessageDTOs;
-using YummyRestaurant.Domain.Entities;
+using YummyRestaurant.Application.Features.Messages.Commands.CreateMessage;
+using YummyRestaurant.Application.Features.Messages.Commands.RemoveMessage;
+using YummyRestaurant.Application.Features.Messages.Commands.UpdateMessage;
+using YummyRestaurant.Application.Features.Messages.Queries.GetMessageById;
+using YummyRestaurant.Application.Features.Messages.Queries.GetMessageList;
 
 namespace YummyRestaurant.API.Controllers;
 
@@ -10,52 +14,61 @@ namespace YummyRestaurant.API.Controllers;
 [ApiController]
 public class MessagesController : ControllerBase
 {
-    private readonly IGenericService<Message> _messageService;
-    private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
+    private readonly IValidator<CreateMessageDto> _createValidator;
+    private readonly IValidator<UpdateMessageDto> _updateValidator;
 
-    public MessagesController(IGenericService<Message> messageService, IMapper mapper)
+    public MessagesController(IMediator mediator, IValidator<CreateMessageDto> createValidator, IValidator<UpdateMessageDto> updateValidator)
     {
-        _messageService = messageService;
-        _mapper = mapper;
+        _mediator = mediator;
+        _createValidator = createValidator;
+        _updateValidator = updateValidator;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetList()
     {
-        var values = await _messageService.GetAllAsync();
-        var dtos = _mapper.Map<List<ResultMessageDto>>(values);
-        return Ok(dtos);
+        var values = await _mediator.Send(new GetMessageQuery());
+        return Ok(values);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var value = await _messageService.GetByIdAsync(id);
-        var dto = _mapper.Map<GetByIdMessageDto>(value);
-        return Ok(dto);
+        var value = await _mediator.Send(new GetMessageByIdQuery(id));
+        return Ok(value);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateMessageDto createMessageDto)
+    public async Task<IActionResult> Create([FromBody] CreateMessageDto createMessageDto)
     {
-        var message = _mapper.Map<Message>(createMessageDto);
-        await _messageService.AddAsync(message);
+        var validationResult = await _createValidator.ValidateAsync(createMessageDto);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+
+        await _mediator.Send(new CreateMessageCommand(createMessageDto));
         return Ok("Message successfully added");
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        var value = await _messageService.GetByIdAsync(id);
-        await _messageService.RemoveAsync(value);
+        await _mediator.Send(new RemoveMessageCommand(id));
         return Ok("Message successfully deleted");
     }
 
     [HttpPut]
-    public async Task<IActionResult> Update(UpdateMessageDto updateMessageDto)
+    public async Task<IActionResult> Update([FromBody] UpdateMessageDto updateMessageDto)
     {
-        var message = _mapper.Map<Message>(updateMessageDto);
-        await _messageService.UpdateAsync(message);
+        var validationResult = await _updateValidator.ValidateAsync(updateMessageDto);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+
+        await _mediator.Send(new UpdateMessageCommand(updateMessageDto));
         return Ok("Message successfully updated");
     }
 }

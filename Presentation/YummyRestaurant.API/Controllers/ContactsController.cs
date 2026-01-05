@@ -1,8 +1,12 @@
-using AutoMapper;
+using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using YummyRestaurant.Application.Abstract;
 using YummyRestaurant.Application.DTOs.ContactDTOs;
-using YummyRestaurant.Domain.Entities;
+using YummyRestaurant.Application.Features.Contacts.Commands.CreateContact;
+using YummyRestaurant.Application.Features.Contacts.Commands.RemoveContact;
+using YummyRestaurant.Application.Features.Contacts.Commands.UpdateContact;
+using YummyRestaurant.Application.Features.Contacts.Queries.GetContactById;
+using YummyRestaurant.Application.Features.Contacts.Queries.GetContactList;
 
 namespace YummyRestaurant.API.Controllers;
 
@@ -10,52 +14,61 @@ namespace YummyRestaurant.API.Controllers;
 [ApiController]
 public class ContactsController : ControllerBase
 {
-    private readonly IGenericService<Contact> _contactService;
-    private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
+    private readonly IValidator<CreateContactDto> _createValidator;
+    private readonly IValidator<UpdateContactDto> _updateValidator;
 
-    public ContactsController(IGenericService<Contact> contactService, IMapper mapper)
+    public ContactsController(IMediator mediator, IValidator<CreateContactDto> createValidator, IValidator<UpdateContactDto> updateValidator)
     {
-        _contactService = contactService;
-        _mapper = mapper;
+        _mediator = mediator;
+        _createValidator = createValidator;
+        _updateValidator = updateValidator;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetList()
     {
-        var values = await _contactService.GetAllAsync();
-        var dtos = _mapper.Map<List<ResultContactDto>>(values);
-        return Ok(dtos);
+        var values = await _mediator.Send(new GetContactQuery());
+        return Ok(values);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var value = await _contactService.GetByIdAsync(id);
-        var dto = _mapper.Map<GetByIdContactDto>(value);
-        return Ok(dto);
+        var value = await _mediator.Send(new GetContactByIdQuery(id));
+        return Ok(value);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateContactDto createContactDto)
+    public async Task<IActionResult> Create([FromBody] CreateContactDto createContactDto)
     {
-        var contact = _mapper.Map<Contact>(createContactDto);
-        await _contactService.AddAsync(contact);
+        var validationResult = await _createValidator.ValidateAsync(createContactDto);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+
+        await _mediator.Send(new CreateContactCommand(createContactDto));
         return Ok("Contact successfully added");
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        var value = await _contactService.GetByIdAsync(id);
-        await _contactService.RemoveAsync(value);
+        await _mediator.Send(new RemoveContactCommand(id));
         return Ok("Contact successfully deleted");
     }
 
     [HttpPut]
-    public async Task<IActionResult> Update(UpdateContactDto updateContactDto)
+    public async Task<IActionResult> Update([FromBody] UpdateContactDto updateContactDto)
     {
-        var contact = _mapper.Map<Contact>(updateContactDto);
-        await _contactService.UpdateAsync(contact);
+        var validationResult = await _updateValidator.ValidateAsync(updateContactDto);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+
+        await _mediator.Send(new UpdateContactCommand(updateContactDto));
         return Ok("Contact successfully updated");
     }
 }

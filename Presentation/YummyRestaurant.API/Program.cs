@@ -1,10 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using YummyRestaurant.Application.Abstract;
-using YummyRestaurant.Application.Concrete;
+
 using YummyRestaurant.Persistence.Context;
 using YummyRestaurant.Persistence.Repositories;
 using Scalar.AspNetCore;
 using AutoMapper;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using YummyRestaurant.Application.Mapping;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace YummyRestaurant.API;
 
@@ -20,6 +25,9 @@ public class Program
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
+        // FluentValidation
+        builder.Services.AddValidatorsFromAssemblyContaining<YummyRestaurant.Application.Validators.CategoryValidators.CreateCategoryValidator>();
+
         // Database Context
         builder.Services.AddDbContext<YummyRestaurantContext>(options =>
         {
@@ -28,10 +36,14 @@ public class Program
 
         // Dependency Injection
         builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-        builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericManager<>));
+        builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
         
         // AutoMapper
-        builder.Services.AddAutoMapper(cfg => cfg.AddProfile<YummyRestaurant.Application.Mapping.GeneralMapping>());
+        builder.Services.AddAutoMapper(cfg => cfg.AddProfile<GeneralMapping>());
+
+        // MediatR
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(YummyRestaurant.Application.Mapping.GeneralMapping).Assembly));
 
         var app = builder.Build();
 

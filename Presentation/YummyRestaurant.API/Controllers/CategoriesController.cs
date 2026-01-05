@@ -1,8 +1,12 @@
-using AutoMapper;
+using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using YummyRestaurant.Application.Abstract;
 using YummyRestaurant.Application.DTOs.CategoryDTOs;
-using YummyRestaurant.Domain.Entities;
+using YummyRestaurant.Application.Features.Categories.Commands.CreateCategory;
+using YummyRestaurant.Application.Features.Categories.Commands.RemoveCategory;
+using YummyRestaurant.Application.Features.Categories.Commands.UpdateCategory;
+using YummyRestaurant.Application.Features.Categories.Queries.GetCategoryById;
+using YummyRestaurant.Application.Features.Categories.Queries.GetCategoryList;
 
 namespace YummyRestaurant.API.Controllers;
 
@@ -10,52 +14,61 @@ namespace YummyRestaurant.API.Controllers;
 [ApiController]
 public class CategoriesController : ControllerBase
 {
-    private readonly IGenericService<Category> _categoryService;
-    private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
+    private readonly IValidator<CreateCategoryDto> _createValidator;
+    private readonly IValidator<UpdateCategoryDto> _updateValidator;
 
-    public CategoriesController(IGenericService<Category> categoryService, IMapper mapper)
+    public CategoriesController(IMediator mediator, IValidator<CreateCategoryDto> createValidator, IValidator<UpdateCategoryDto> updateValidator)
     {
-        _categoryService = categoryService;
-        _mapper = mapper;
+        _mediator = mediator;
+        _createValidator = createValidator;
+        _updateValidator = updateValidator;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetList()
     {
-        var values = await _categoryService.GetAllAsync();
-        var dtos = _mapper.Map<List<ResultCategoryDto>>(values);
-        return Ok(dtos);
+        var values = await _mediator.Send(new GetCategoryQuery());
+        return Ok(values);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var value = await _categoryService.GetByIdAsync(id);
-        var dto = _mapper.Map<GetByIdCategoryDto>(value);
-        return Ok(dto);
+        var value = await _mediator.Send(new GetCategoryByIdQuery(id));
+        return Ok(value);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateCategoryDto createCategoryDto)
+    public async Task<IActionResult> Create([FromBody] CreateCategoryDto createCategoryDto)
     {
-        var category = _mapper.Map<Category>(createCategoryDto);
-        await _categoryService.AddAsync(category);
+        var validationResult = await _createValidator.ValidateAsync(createCategoryDto);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+
+        await _mediator.Send(new CreateCategoryCommand(createCategoryDto));
         return Ok("Category successfully added");
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        var value = await _categoryService.GetByIdAsync(id);
-        await _categoryService.RemoveAsync(value);
+        await _mediator.Send(new RemoveCategoryCommand(id));
         return Ok("Category successfully deleted");
     }
 
     [HttpPut]
-    public async Task<IActionResult> Update(UpdateCategoryDto updateCategoryDto)
+    public async Task<IActionResult> Update([FromBody] UpdateCategoryDto updateCategoryDto)
     {
-        var category = _mapper.Map<Category>(updateCategoryDto);
-        await _categoryService.UpdateAsync(category);
+        var validationResult = await _updateValidator.ValidateAsync(updateCategoryDto);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+
+        await _mediator.Send(new UpdateCategoryCommand(updateCategoryDto));
         return Ok("Category successfully updated");
     }
 }

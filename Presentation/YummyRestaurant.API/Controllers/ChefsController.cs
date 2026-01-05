@@ -1,8 +1,12 @@
-using AutoMapper;
+using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using YummyRestaurant.Application.Abstract;
 using YummyRestaurant.Application.DTOs.ChefDTOs;
-using YummyRestaurant.Domain.Entities;
+using YummyRestaurant.Application.Features.Chefs.Commands.CreateChef;
+using YummyRestaurant.Application.Features.Chefs.Commands.RemoveChef;
+using YummyRestaurant.Application.Features.Chefs.Commands.UpdateChef;
+using YummyRestaurant.Application.Features.Chefs.Queries.GetChefById;
+using YummyRestaurant.Application.Features.Chefs.Queries.GetChefList;
 
 namespace YummyRestaurant.API.Controllers;
 
@@ -10,52 +14,61 @@ namespace YummyRestaurant.API.Controllers;
 [ApiController]
 public class ChefsController : ControllerBase
 {
-    private readonly IGenericService<Chef> _chefService;
-    private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
+    private readonly IValidator<CreateChefDto> _createValidator;
+    private readonly IValidator<UpdateChefDto> _updateValidator;
 
-    public ChefsController(IGenericService<Chef> chefService, IMapper mapper)
+    public ChefsController(IMediator mediator, IValidator<CreateChefDto> createValidator, IValidator<UpdateChefDto> updateValidator)
     {
-        _chefService = chefService;
-        _mapper = mapper;
+        _mediator = mediator;
+        _createValidator = createValidator;
+        _updateValidator = updateValidator;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetList()
     {
-        var values = await _chefService.GetAllAsync();
-        var dtos = _mapper.Map<List<ResultChefDto>>(values);
-        return Ok(dtos);
+        var values = await _mediator.Send(new GetChefQuery());
+        return Ok(values);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var value = await _chefService.GetByIdAsync(id);
-        var dto = _mapper.Map<GetByIdChefDto>(value);
-        return Ok(dto);
+        var value = await _mediator.Send(new GetChefByIdQuery(id));
+        return Ok(value);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateChefDto createChefDto)
+    public async Task<IActionResult> Create([FromBody] CreateChefDto createChefDto)
     {
-        var chef = _mapper.Map<Chef>(createChefDto);
-        await _chefService.AddAsync(chef);
+        var validationResult = await _createValidator.ValidateAsync(createChefDto);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+
+        await _mediator.Send(new CreateChefCommand(createChefDto));
         return Ok("Chef successfully added");
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        var value = await _chefService.GetByIdAsync(id);
-        await _chefService.RemoveAsync(value);
+        await _mediator.Send(new RemoveChefCommand(id));
         return Ok("Chef successfully deleted");
     }
 
     [HttpPut]
-    public async Task<IActionResult> Update(UpdateChefDto updateChefDto)
+    public async Task<IActionResult> Update([FromBody] UpdateChefDto updateChefDto)
     {
-        var chef = _mapper.Map<Chef>(updateChefDto);
-        await _chefService.UpdateAsync(chef);
+        var validationResult = await _updateValidator.ValidateAsync(updateChefDto);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+
+        await _mediator.Send(new UpdateChefCommand(updateChefDto));
         return Ok("Chef successfully updated");
     }
 }

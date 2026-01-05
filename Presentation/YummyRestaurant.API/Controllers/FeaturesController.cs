@@ -1,8 +1,12 @@
-using AutoMapper;
+using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using YummyRestaurant.Application.Abstract;
 using YummyRestaurant.Application.DTOs.FeatureDTOs;
-using YummyRestaurant.Domain.Entities;
+using YummyRestaurant.Application.Features.Features.Commands.CreateFeature;
+using YummyRestaurant.Application.Features.Features.Commands.RemoveFeature;
+using YummyRestaurant.Application.Features.Features.Commands.UpdateFeature;
+using YummyRestaurant.Application.Features.Features.Queries.GetFeatureById;
+using YummyRestaurant.Application.Features.Features.Queries.GetFeatureList;
 
 namespace YummyRestaurant.API.Controllers;
 
@@ -10,52 +14,61 @@ namespace YummyRestaurant.API.Controllers;
 [ApiController]
 public class FeaturesController : ControllerBase
 {
-    private readonly IGenericService<Feature> _featureService;
-    private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
+    private readonly IValidator<CreateFeatureDto> _createValidator;
+    private readonly IValidator<UpdateFeatureDto> _updateValidator;
 
-    public FeaturesController(IGenericService<Feature> featureService, IMapper mapper)
+    public FeaturesController(IMediator mediator, IValidator<CreateFeatureDto> createValidator, IValidator<UpdateFeatureDto> updateValidator)
     {
-        _featureService = featureService;
-        _mapper = mapper;
+        _mediator = mediator;
+        _createValidator = createValidator;
+        _updateValidator = updateValidator;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetList()
     {
-        var values = await _featureService.GetAllAsync();
-        var dtos = _mapper.Map<List<ResultFeatureDto>>(values);
-        return Ok(dtos);
+        var values = await _mediator.Send(new GetFeatureQuery());
+        return Ok(values);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var value = await _featureService.GetByIdAsync(id);
-        var dto = _mapper.Map<GetByIdFeatureDto>(value);
-        return Ok(dto);
+        var value = await _mediator.Send(new GetFeatureByIdQuery(id));
+        return Ok(value);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateFeatureDto createFeatureDto)
+    public async Task<IActionResult> Create([FromBody] CreateFeatureDto createFeatureDto)
     {
-        var feature = _mapper.Map<Feature>(createFeatureDto);
-        await _featureService.AddAsync(feature);
+        var validationResult = await _createValidator.ValidateAsync(createFeatureDto);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+
+        await _mediator.Send(new CreateFeatureCommand(createFeatureDto));
         return Ok("Feature successfully added");
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        var value = await _featureService.GetByIdAsync(id);
-        await _featureService.RemoveAsync(value);
+        await _mediator.Send(new RemoveFeatureCommand(id));
         return Ok("Feature successfully deleted");
     }
 
     [HttpPut]
-    public async Task<IActionResult> Update(UpdateFeatureDto updateFeatureDto)
+    public async Task<IActionResult> Update([FromBody] UpdateFeatureDto updateFeatureDto)
     {
-        var feature = _mapper.Map<Feature>(updateFeatureDto);
-        await _featureService.UpdateAsync(feature);
+        var validationResult = await _updateValidator.ValidateAsync(updateFeatureDto);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+
+        await _mediator.Send(new UpdateFeatureCommand(updateFeatureDto));
         return Ok("Feature successfully updated");
     }
 }
