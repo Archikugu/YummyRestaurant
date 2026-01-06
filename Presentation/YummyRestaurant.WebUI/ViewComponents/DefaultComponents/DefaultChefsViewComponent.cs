@@ -4,12 +4,13 @@ using YummyRestaurant.Application.DTOs.ChefDTOs;
 
 namespace YummyRestaurant.WebUI.ViewComponents.DefaultComponents
 {
-    public class DefaultChefsViewComponent(IHttpClientFactory _httpClientFactory) : ViewComponent
+    public class DefaultChefsViewComponent(IHttpClientFactory _httpClientFactory, IConfiguration _configuration) : ViewComponent
     {
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7182/api/Chefs");
+            var baseUrl = _configuration["ApiSettings:BaseUrl"];
+            var responseMessage = await client.GetAsync($"{baseUrl}/api/Chefs");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();

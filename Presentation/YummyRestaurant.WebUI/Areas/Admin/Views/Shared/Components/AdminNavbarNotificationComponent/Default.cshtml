@@ -1,0 +1,30 @@
+@model List<YummyRestaurant.Application.DTOs.NotificationDTOs.ResultNotificationDto>
+
+<li class="dropdown dropdown-list-toggle">
+    <a href="#" data-toggle="dropdown" class="nav-link notification-toggle nav-link-lg">
+        <i data-feather="bell" class="bell"></i>
+    </a>
+    <div class="dropdown-menu dropdown-list dropdown-menu-right pullDown" style="width: 350px !important;">
+        <div class="dropdown-header">
+            Bildirimler
+            <div class="float-right">
+                <a href="#">Tümünü Okundu Olarak İşaretle</a>
+            </div>
+        </div>
+        <div class="dropdown-list-content dropdown-list-icons">
+            @foreach(var item in Model)
+            {
+            <a href="#" class="dropdown-item @(item.IsRead ? "" : "dropdown-item-unread")"> 
+                <span class="dropdown-item-icon bg-@item.Type text-white"> <i class="@item.Icon"></i> </span> 
+                <span class="dropdown-item-desc" style="white-space: normal !important; word-wrap: break-word !important; min-width: 0;"> 
+                    @item.Description 
+                    <span class="time">@item.Date.ToShortDateString()</span> 
+                </span>
+            </a> 
+            }
+        </div>
+        <div class="dropdown-footer text-center">
+            <a href="#">Tümünü Gör <i class="fas fa-chevron-right"></i></a>
+        </div>
+    </div>
+</li>

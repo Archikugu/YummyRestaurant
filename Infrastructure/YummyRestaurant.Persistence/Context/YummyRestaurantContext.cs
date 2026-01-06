@@ -20,4 +20,5 @@ public class YummyRestaurantContext : DbContext
     public DbSet<Service> Services { get; set; }
     public DbSet<Testimonial> Testimonials { get; set; }
     public DbSet<RestaurantEvent> RestaurantEvents { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
 }

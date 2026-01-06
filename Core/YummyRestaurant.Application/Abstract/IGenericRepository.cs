@@ -7,6 +7,7 @@ public interface IGenericRepository<T> where T : BaseEntity
 {
     Task<T?> GetByIdAsync(int id);
     Task<List<T>> GetAllAsync();
+    Task<List<T>> GetFilteredListAsync(Expression<Func<T, bool>> expression);
     IQueryable<T> Where(Expression<Func<T, bool>> expression);
     Task<bool> AnyAsync(Expression<Func<T, bool>> expression);
     Task AddAsync(T entity);

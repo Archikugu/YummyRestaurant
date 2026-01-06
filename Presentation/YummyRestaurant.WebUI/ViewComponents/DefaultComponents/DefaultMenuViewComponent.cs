@@ -6,15 +6,16 @@ using YummyRestaurant.WebUI.Models;
 
 namespace YummyRestaurant.WebUI.ViewComponents.DefaultComponents
 {
-    public class DefaultMenuViewComponent(IHttpClientFactory _httpClientFactory) : ViewComponent
+    public class DefaultMenuViewComponent(IHttpClientFactory _httpClientFactory, IConfiguration _configuration) : ViewComponent
     {
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var client = _httpClientFactory.CreateClient();
+            var baseUrl = _configuration["ApiSettings:BaseUrl"];
 
             // Fetch Categories
-            var categoriesResponse = await client.GetAsync("https://localhost:7182/api/Categories");
-            var productsResponse = await client.GetAsync("https://localhost:7182/api/Products");
+            var categoriesResponse = await client.GetAsync($"{baseUrl}/api/Categories");
+            var productsResponse = await client.GetAsync($"{baseUrl}/api/Products");
 
             if (categoriesResponse.IsSuccessStatusCode && productsResponse.IsSuccessStatusCode)
             {

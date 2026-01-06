@@ -39,6 +39,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         return await _dbSet.ToListAsync();
     }
 
+    public async Task<List<T>> GetFilteredListAsync(Expression<Func<T, bool>> expression)
+    {
+        return await _dbSet.Where(expression).ToListAsync();
+    }
+
     public async Task<T?> GetByIdAsync(int id)
     {
         return await _dbSet.FindAsync(id);

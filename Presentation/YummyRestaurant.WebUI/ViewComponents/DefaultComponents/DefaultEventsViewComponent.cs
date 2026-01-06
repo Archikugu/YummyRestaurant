@@ -7,12 +7,13 @@ using YummyRestaurant.Application.DTOs.RestaurantEventDTOs;
 
 namespace YummyRestaurant.WebUI.ViewComponents.DefaultComponents
 {
-    public class DefaultEventsViewComponent(IHttpClientFactory _httpClientFactory) : ViewComponent
+    public class DefaultEventsViewComponent(IHttpClientFactory _httpClientFactory, IConfiguration _configuration) : ViewComponent
     {
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7182/api/RestaurantEvents");
+            var baseUrl = _configuration["ApiSettings:BaseUrl"];
+            var responseMessage = await client.GetAsync($"{baseUrl}/api/RestaurantEvents");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();

@@ -4,12 +4,13 @@ using YummyRestaurant.Application.DTOs.PhotoGalleryDTOs;
 
 namespace YummyRestaurant.WebUI.ViewComponents.DefaultComponents
 {
-    public class DefaultGalleryViewComponent(IHttpClientFactory _httpClientFactory) : ViewComponent
+    public class DefaultGalleryViewComponent(IHttpClientFactory _httpClientFactory, IConfiguration _configuration) : ViewComponent
     {
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7182/api/PhotoGalleries");
+            var baseUrl = _configuration["ApiSettings:BaseUrl"];
+            var responseMessage = await client.GetAsync($"{baseUrl}/api/PhotoGalleries");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();

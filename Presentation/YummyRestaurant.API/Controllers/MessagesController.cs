@@ -7,6 +7,7 @@ using YummyRestaurant.Application.Features.Messages.Commands.RemoveMessage;
 using YummyRestaurant.Application.Features.Messages.Commands.UpdateMessage;
 using YummyRestaurant.Application.Features.Messages.Queries.GetMessageById;
 using YummyRestaurant.Application.Features.Messages.Queries.GetMessageList;
+using YummyRestaurant.Application.Features.Messages.Queries.GetMessageByStatus;
 
 namespace YummyRestaurant.API.Controllers;
 
@@ -27,6 +28,13 @@ public class MessagesController(IMediator _mediator, IValidator<CreateMessageDto
     {
         var value = await _mediator.Send(new GetMessageByIdQuery(id));
         return Ok(value);
+    }
+
+    [HttpGet("filter/{isRead}")]
+    public async Task<IActionResult> GetByStatus(bool isRead)
+    {
+        var values = await _mediator.Send(new GetMessageByStatusQuery(isRead));
+        return Ok(values);
     }
 
     [HttpPost]
