@@ -2,7 +2,7 @@
 namespace YummyRestaurant.Domain.Entities;
 public class Service : BaseEntity
 {
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public string IconUrl { get; set; }
+    public required string Title { get; set; }
+    public required string Description { get; set; }
+    public required string IconUrl { get; set; }
 }

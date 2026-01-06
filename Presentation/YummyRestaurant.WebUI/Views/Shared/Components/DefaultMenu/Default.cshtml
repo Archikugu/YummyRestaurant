@@ -1,0 +1,65 @@
+@using YummyRestaurant.Application.DTOs.ProductDTOs
+@model List<ResultProductDto>
+
+<section id="menu" class="menu section">
+
+    <!-- Section Title -->
+    <div class="container section-title" data-aos="fade-up">
+        <h2>Menümüz</h2>
+        <p><span>Lezzetli</span> <span class="description-title">Menümüze Göz Atın</span></p>
+    </div><!-- End Section Title -->
+
+    <div class="container">
+        @if (Model != null && Model.Any())
+        {
+            var categories = Model.Select(x => x.CategoryName).Distinct().ToList();
+
+            <ul class="nav nav-tabs d-flex justify-content-center" data-aos="fade-up" data-aos-delay="100">
+                @for (int i = 0; i < categories.Count; i++)
+                {
+                    var category = categories[i];
+                    var activeClass = i == 0 ? "active show" : "";
+                    <li class="nav-item">
+                        <a class="nav-link @activeClass" data-bs-toggle="tab" data-bs-target="#menu-@i">
+                            <h4>@category</h4>
+                        </a>
+                    </li>
+                }
+            </ul>
+
+            <div class="tab-content" data-aos="fade-up" data-aos-delay="200">
+                @for (int i = 0; i < categories.Count; i++)
+                {
+                    var category = categories[i];
+                    var activeClass = i == 0 ? "active show" : "";
+                    var categoryProducts = Model.Where(x => x.CategoryName == category).ToList();
+
+                    <div class="tab-pane fade @activeClass" id="menu-@i">
+
+                        <div class="tab-header text-center">
+                            <p>Menü</p>
+                            <h3>@category</h3>
+                        </div>
+
+                        <div class="row gy-5">
+                            @foreach (var product in categoryProducts)
+                            {
+                                <div class="col-lg-4 menu-item">
+                                    <a href="@product.ImageUrl" class="glightbox"><img src="@product.ImageUrl" class="menu-img img-fluid" alt="@product.Name"></a>
+                                    <h4>@product.Name</h4>
+                                    <p class="ingredients">
+                                        @product.Description
+                                    </p>
+                                    <p class="price">
+                                        @product.Price.ToString("C")
+                                    </p>
+                                </div><!-- Menu Item -->
+                            }
+                        </div>
+                    </div><!-- End Menu Content -->
+                }
+            </div>
+        }
+    </div>
+
+</section>

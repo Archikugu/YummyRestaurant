@@ -12,18 +12,8 @@ namespace YummyRestaurant.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class FeaturesController : ControllerBase
+public class FeaturesController(IMediator _mediator, IValidator<CreateFeatureDto> _createValidator, IValidator<UpdateFeatureDto> _updateValidator) : ControllerBase
 {
-    private readonly IMediator _mediator;
-    private readonly IValidator<CreateFeatureDto> _createValidator;
-    private readonly IValidator<UpdateFeatureDto> _updateValidator;
-
-    public FeaturesController(IMediator mediator, IValidator<CreateFeatureDto> createValidator, IValidator<UpdateFeatureDto> updateValidator)
-    {
-        _mediator = mediator;
-        _createValidator = createValidator;
-        _updateValidator = updateValidator;
-    }
 
     [HttpGet]
     public async Task<IActionResult> GetList()
