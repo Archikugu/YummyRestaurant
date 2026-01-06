@@ -1,5 +1,5 @@
-@using YummyRestaurant.Application.DTOs.ProductDTOs
-@model List<ResultProductDto>
+@using YummyRestaurant.WebUI.Models
+@model MenuViewModel
 
 <section id="menu" class="menu section">
 
@@ -10,35 +10,33 @@
     </div><!-- End Section Title -->
 
     <div class="container">
-        @if (Model != null && Model.Any())
+        @if (Model != null && Model.Categories != null && Model.Categories.Any())
         {
-            var categories = Model.Select(x => x.CategoryName).Distinct().ToList();
-
             <ul class="nav nav-tabs d-flex justify-content-center" data-aos="fade-up" data-aos-delay="100">
-                @for (int i = 0; i < categories.Count; i++)
+                @for (int i = 0; i < Model.Categories.Count; i++)
                 {
-                    var category = categories[i];
+                    var category = Model.Categories[i];
                     var activeClass = i == 0 ? "active show" : "";
                     <li class="nav-item">
                         <a class="nav-link @activeClass" data-bs-toggle="tab" data-bs-target="#menu-@i">
-                            <h4>@category</h4>
+                            <h4>@category.Name</h4>
                         </a>
                     </li>
                 }
             </ul>
 
             <div class="tab-content" data-aos="fade-up" data-aos-delay="200">
-                @for (int i = 0; i < categories.Count; i++)
+                @for (int i = 0; i < Model.Categories.Count; i++)
                 {
-                    var category = categories[i];
+                    var category = Model.Categories[i];
                     var activeClass = i == 0 ? "active show" : "";
-                    var categoryProducts = Model.Where(x => x.CategoryName == category).ToList();
+                    var categoryProducts = Model.Products.Where(x => x.CategoryId == category.Id).ToList();
 
                     <div class="tab-pane fade @activeClass" id="menu-@i">
 
                         <div class="tab-header text-center">
                             <p>Menü</p>
-                            <h3>@category</h3>
+                            <h3>@category.Name</h3>
                         </div>
 
                         <div class="row gy-5">

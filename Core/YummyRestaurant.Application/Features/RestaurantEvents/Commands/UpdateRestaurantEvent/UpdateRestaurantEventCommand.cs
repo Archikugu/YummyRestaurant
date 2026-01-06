@@ -1,0 +1,15 @@
+using MediatR;
+
+namespace YummyRestaurant.Application.Features.RestaurantEvents.Commands.UpdateRestaurantEvent
+{
+    public class UpdateRestaurantEventCommand : IRequest
+    {
+        public int Id { get; set; }
+        public required string Title { get; set; }
+        public required string Description { get; set; }
+        public decimal Price { get; set; }
+        public required string ImageUrl { get; set; }
+        public string? VideoUrl { get; set; }
+        public bool IsActive { get; set; }
+    }
+}

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YummyRestaurant.Persistence.Context;
 
@@ -11,9 +12,11 @@ using YummyRestaurant.Persistence.Context;
 namespace YummyRestaurant.Persistence.Migrations
 {
     [DbContext(typeof(YummyRestaurantContext))]
-    partial class YummyRestaurantContextModelSnapshot : ModelSnapshot
+    [Migration("20260106131249_AddRestaurantEventEntity")]
+    partial class AddRestaurantEventEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

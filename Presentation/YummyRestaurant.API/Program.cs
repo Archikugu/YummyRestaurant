@@ -37,6 +37,7 @@ public class Program
         // Dependency Injection
         builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         builder.Services.AddScoped<IProductRepository, ProductRepository>();
+        builder.Services.AddScoped<IRestaurantEventRepository, RestaurantEventRepository>();
 
         
         // AutoMapper

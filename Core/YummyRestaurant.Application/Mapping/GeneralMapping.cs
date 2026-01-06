@@ -9,6 +9,9 @@ using YummyRestaurant.Application.DTOs.BookingDTOs;
 using YummyRestaurant.Application.DTOs.PhotoGalleryDTOs;
 using YummyRestaurant.Application.DTOs.ServiceDTOs;
 using YummyRestaurant.Application.DTOs.TestimonialDTOs;
+using YummyRestaurant.Application.DTOs.RestaurantEventDTOs;
+using YummyRestaurant.Application.Features.RestaurantEvents.Commands.CreateRestaurantEvent;
+using YummyRestaurant.Application.Features.RestaurantEvents.Commands.UpdateRestaurantEvent;
 using YummyRestaurant.Domain.Entities;
 
 namespace YummyRestaurant.Application.Mapping;
@@ -70,5 +73,12 @@ public class GeneralMapping : Profile
         CreateMap<Testimonial, CreateTestimonialDto>().ReverseMap();
         CreateMap<Testimonial, UpdateTestimonialDto>().ReverseMap();
         CreateMap<Testimonial, GetByIdTestimonialDto>().ReverseMap();
+
+         CreateMap<RestaurantEvent, ResultRestaurantEventDto>().ReverseMap();
+        CreateMap<RestaurantEvent, CreateRestaurantEventDto>().ReverseMap();
+        CreateMap<RestaurantEvent, UpdateRestaurantEventDto>().ReverseMap();
+        CreateMap<RestaurantEvent, GetByIdRestaurantEventDto>().ReverseMap();
+        CreateMap<RestaurantEvent, CreateRestaurantEventCommand>().ReverseMap();
+        CreateMap<RestaurantEvent, UpdateRestaurantEventCommand>().ReverseMap();
     }
 }
