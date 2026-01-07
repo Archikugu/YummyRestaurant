@@ -1,0 +1,48 @@
+@model YummyRestaurant.Application.DTOs.FeatureDTOs.CreateFeatureDto
+@{
+    ViewData["Title"] = "Yeni Öne Çıkan Ekle";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Yeni Öne Çıkan Ekleme Sayfası</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="form-group">
+                        <label for="title">Başlık</label>
+                        <input type="text" class="form-control" asp-for="Title" id="title" placeholder="Başlık giriniz">
+                    </div> 
+                    <div class="form-group">
+                        <label for="subTitle">Alt Başlık</label>
+                        <input type="text" class="form-control" asp-for="SubTitle" id="subTitle" placeholder="Alt başlık giriniz">
+                    </div>
+                     <div class="form-group">
+                        <label for="imageUrl">Resim URL</label>
+                        <input type="text" class="form-control" asp-for="ImageUrl" id="imageUrl" placeholder="Resim url giriniz">
+                    </div>
+                    <div class="form-group">
+                        <label for="videoUrl">Video URL</label>
+                        <input type="text" class="form-control" asp-for="VideoUrl" id="videoUrl" placeholder="Video url giriniz">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Açıklama</label>
+                         <textarea class="form-control" asp-for="Description" rows="5" style="height:100px"></textarea>
+                    </div>
+                     <div class="form-group">
+                        <label for="featureStatus">Durum</label>
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" asp-for="IsActive" id="featureStatus">
+                            <label class="custom-control-label" for="featureStatus">Pasif / Aktif</label>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary"><i class="fas fa-save"></i> Kaydet</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

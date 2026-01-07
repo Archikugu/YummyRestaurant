@@ -27,8 +27,8 @@ namespace YummyRestaurant.WebUI.ViewComponents.DefaultComponents
 
                 var viewModel = new MenuViewModel
                 {
-                    Categories = categories ?? new(),
-                    Products = products ?? new()
+                    Categories = categories?.Where(x => x.IsActive).ToList() ?? [],
+                    Products = products?.Where(x => x.IsActive).ToList() ?? []
                 };
 
                 return View(viewModel);

@@ -7,6 +7,7 @@ public class CreateFeatureDto
     public required string Description { get; set; }
     public required string ImageUrl { get; set; }
     public required string VideoUrl { get; set; }
+    public bool IsActive { get; set; }
 }
 
 

@@ -7,5 +7,7 @@ public class CreateProductDto
     public decimal Price { get; set; }
     public required string ImageUrl { get; set; }
     public int CategoryId { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public bool IsActive { get; set; }
 }
 

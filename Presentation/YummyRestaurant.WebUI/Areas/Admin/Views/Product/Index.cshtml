@@ -1,0 +1,82 @@
+@model List<YummyRestaurant.Application.DTOs.ProductDTOs.ResultProductDto>
+@{
+    ViewData["Title"] = "Ürün Listesi";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int count = 0;
+}
+
+<script src="~/Otika/assets/js/page/components-sweetalert.js"></script>
+
+<script>
+    function deleteProduct(id, name) {
+        Swal.fire({
+            title: 'Silmek istediğinize emin misiniz?',
+            text: "'" + name + "' adlı ürünü silmek üzeresiniz. Bu işlem geri alınamaz!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'İptal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "/Admin/Product/Delete/" + id;
+            }
+        })
+    }
+</script>
+
+<div class="row">
+    <div class="col-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Ürün Listesi</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-md">
+                        <tr>
+                            <th>#</th>
+                            <th>Resim</th>
+                            <th>Ürün Adı</th>
+                            <th>Kategori</th>
+                            <th>Fiyat</th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+                        @foreach (var item in Model)
+                        {
+                            count++;
+                            <tr>
+                                <td>@count</td>
+                                <td>
+                                    <img src="@item.ImageUrl" width="50" height="50" style="object-fit:cover; border-radius:50%" />
+                                </td>
+                                <td>@item.Name</td>
+                                <td>@item.CategoryName</td>
+                                <td>@item.Price ₺</td>
+                                <td>
+                                    @if(item.IsActive)
+                                    {
+                                         <div class="badge badge-success">Aktif</div>
+                                    }
+                                    else
+                                    {
+                                         <div class="badge badge-danger">Pasif</div>
+                                    }
+                                </td>
+                                <td>
+                                    <button onclick="deleteProduct(@item.Id, '@item.Name')" class="btn btn-outline-danger">Sil</button>
+                                    <a href="/Admin/Product/Update/@item.Id" class="btn btn-outline-success">Güncelle</a>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+                <br />
+                <a href="/Admin/Product/Create" class="btn btn-outline-primary" style="float: left;">Yeni Ürün Girişi</a>
+                <br /><br />
+            </div>
+        </div>
+    </div>
+</div>
