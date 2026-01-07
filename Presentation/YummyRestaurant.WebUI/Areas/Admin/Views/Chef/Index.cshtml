@@ -1,0 +1,69 @@
+@model List<YummyRestaurant.Application.DTOs.ChefDTOs.ResultChefDto>
+@{
+    ViewData["Title"] = "Şef Listesi";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int count = 0;
+}
+
+<script src="~/Otika/assets/js/page/components-sweetalert.js"></script>
+
+<script>
+    function deleteChef(id, name) {
+        Swal.fire({
+            title: 'Silmek istediğinize emin misiniz?',
+            text: "'" + name + "' şefini silmek üzeresiniz. Bu işlem geri alınamaz!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'İptal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "/Admin/Chef/Delete/" + id;
+            }
+        })
+    }
+</script>
+
+<div class="row">
+    <div class="col-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Şef Listesi</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-md">
+                        <tr>
+                            <th>#</th>
+                            <th>Görsel</th>
+                            <th>Ad Soyad</th>
+                            <th>Unvan</th>
+                            <th>İşlemler</th>
+                        </tr>
+                        @foreach (var item in Model)
+                        {
+                            count++;
+                            <tr>
+                                <td>@count</td>
+                                <td>
+                                    <img src="@item.ImageUrl" alt="" style="width:50px; height:50px; border-radius:50%; object-fit:cover;" />
+                                </td>
+                                <td>@item.FirstName @item.LastName</td>
+                                <td>@item.Title</td>
+                                <td>
+                                    <button onclick="deleteChef(@item.Id, '@item.FirstName @item.LastName')" class="btn btn-outline-danger">Sil</button>
+                                    <a href="/Admin/Chef/Update/@item.Id" class="btn btn-outline-success">Güncelle</a>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+                <br />
+                <a href="/Admin/Chef/Create" class="btn btn-outline-primary" style="float: left;">Yeni Şef Ekle</a>
+                <br /><br />
+            </div>
+        </div>
+    </div>
+</div>

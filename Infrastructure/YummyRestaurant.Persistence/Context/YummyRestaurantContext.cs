@@ -18,4 +18,5 @@ public class YummyRestaurantContext(DbContextOptions<YummyRestaurantContext> opt
     public DbSet<Testimonial> Testimonials { get; set; }
     public DbSet<RestaurantEvent> RestaurantEvents { get; set; }
     public DbSet<Notification> Notifications { get; set; }
+    public DbSet<About> Abouts { get; set; }
 }

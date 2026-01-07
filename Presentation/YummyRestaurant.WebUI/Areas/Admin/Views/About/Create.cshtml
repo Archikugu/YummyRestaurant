@@ -1,0 +1,56 @@
+@model YummyRestaurant.Application.DTOs.AboutDTOs.CreateAboutDto
+@{
+    ViewData["Title"] = "Yeni Hakkımızda Yazısı Ekle";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Yeni Hakkımızda Yazısı Ekle</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="form-group">
+                        <label>Başlık</label>
+                        <input type="text" asp-for="Title" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Görsel URL</label>
+                        <input type="text" asp-for="ImageUrl" class="form-control" />
+                    </div>
+                     <div class="form-group">
+                        <label>Görsel 2 URL</label>
+                        <input type="text" asp-for="ImageUrl2" class="form-control" />
+                    </div>
+                     <div class="form-group">
+                        <label>Video URL</label>
+                        <input type="text" asp-for="VideoUrl" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Açıklama (İtalik)</label>
+                        <textarea asp-for="Description" class="form-control" rows="3" style="height:100px"></textarea>
+                    </div>
+                     <div class="form-group">
+                        <label>Açıklama 2</label>
+                        <textarea asp-for="Description2" class="form-control" rows="3" style="height:100px"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Öne Çıkan 1</label>
+                        <input type="text" asp-for="Highlight1" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Öne Çıkan 2</label>
+                        <input type="text" asp-for="Highlight2" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Öne Çıkan 3</label>
+                        <input type="text" asp-for="Highlight3" class="form-control" />
+                    </div>
+                    <button class="btn btn-outline-primary"><i class="fas fa-save"></i> Kaydet</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

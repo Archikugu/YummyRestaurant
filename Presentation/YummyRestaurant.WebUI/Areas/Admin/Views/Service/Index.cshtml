@@ -1,0 +1,69 @@
+@model List<YummyRestaurant.Application.DTOs.ServiceDTOs.ResultServiceDto>
+@{
+    ViewData["Title"] = "Neden Biz? Listesi";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int count = 0;
+}
+
+<script src="~/Otika/assets/js/page/components-sweetalert.js"></script>
+
+<script>
+    function deleteService(id, name) {
+        Swal.fire({
+            title: 'Silmek istediğinize emin misiniz?',
+            text: "'" + name + "' maddesini silmek üzeresiniz. Bu işlem geri alınamaz!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'İptal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "/Admin/Service/Delete/" + id;
+            }
+        })
+    }
+</script>
+
+<div class="row">
+    <div class="col-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Neden Biz? Listesi</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-md">
+                        <tr>
+                            <th>#</th>
+                            <th>İkon</th>
+                            <th>Başlık</th>
+                            <th>Açıklama</th>
+                            <th>İşlemler</th>
+                        </tr>
+                        @foreach (var item in Model)
+                        {
+                            count++;
+                            <tr>
+                                <td>@count</td>
+                                <td>
+                                    <i class="@item.IconUrl" style="font-size:24px"></i>
+                                </td>
+                                <td>@item.Title</td>
+                                <td>@item.Description</td>
+                                <td>
+                                    <button onclick="deleteService(@item.Id, '@item.Title')" class="btn btn-outline-danger">Sil</button>
+                                    <a href="/Admin/Service/Update/@item.Id" class="btn btn-outline-success">Güncelle</a>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+                <br />
+                <a href="/Admin/Service/Create" class="btn btn-outline-primary" style="float: left;">Yeni Madde Ekle</a>
+                <br /><br />
+            </div>
+        </div>
+    </div>
+</div>

@@ -14,6 +14,7 @@ using YummyRestaurant.Application.Features.RestaurantEvents.Commands.CreateResta
 using YummyRestaurant.Application.Features.RestaurantEvents.Commands.UpdateRestaurantEvent;
 
 using YummyRestaurant.Application.DTOs.NotificationDTOs;
+using YummyRestaurant.Application.DTOs.AboutDTOs;
 using YummyRestaurant.Domain.Entities;
 
 namespace YummyRestaurant.Application.Mapping;
@@ -86,5 +87,10 @@ public class GeneralMapping : Profile
         CreateMap<Notification, ResultNotificationDto>().ReverseMap();
         CreateMap<Notification, CreateNotificationDto>().ReverseMap();
         CreateMap<Notification, UpdateNotificationDto>().ReverseMap();
+
+        CreateMap<About, ResultAboutDto>().ReverseMap();
+        CreateMap<About, CreateAboutDto>().ReverseMap();
+        CreateMap<About, UpdateAboutDto>().ReverseMap();
+        CreateMap<About, GetByIdAboutDto>().ReverseMap();
     }
 }

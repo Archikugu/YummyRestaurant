@@ -1,0 +1,33 @@
+@model YummyRestaurant.Application.DTOs.ServiceDTOs.CreateServiceDto
+@{
+    ViewData["Title"] = "Yeni Neden Biz? Maddesi Ekle";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Yeni Neden Biz? Maddesi Ekle</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="form-group">
+                        <label>Başlık</label>
+                        <input type="text" asp-for="Title" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>İkon (CSS Class)</label>
+                        <input type="text" asp-for="IconUrl" class="form-control" placeholder="Örn: bi bi-shop" />
+                        <small class="form-text text-muted">Bootstrap Icons veya FontAwesome sınıflarını kullanabilirsiniz.</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Açıklama</label>
+                        <textarea asp-for="Description" class="form-control" rows="3" style="height:100px"></textarea>
+                    </div>
+                    <button class="btn btn-outline-primary"><i class="fas fa-save"></i> Kaydet</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -634,7 +634,9 @@ $(function () {
     $(".choose-theme li.active").data("theme");
 
     bodytag.removeClass("theme-" + prevTheme);
-    bodytag.addClass("theme-" + $(this).attr("title"));
+    var theme = $(this).attr("title");
+    bodytag.addClass("theme-" + theme);
+    localStorage.setItem('theme-color', theme);
   });
 
   // dark light sidebar button setting
@@ -646,6 +648,7 @@ $(function () {
       $("body").removeClass("light-sidebar");
       $("body").addClass("dark-sidebar");
     }
+    localStorage.setItem('sidebar-color', $(this).val());
   });
 
   // dark light layout button setting
@@ -669,6 +672,7 @@ $(function () {
       $(".choose-theme li[title|='black']").addClass("active");
       $(".selectgroup-input[value|='2']").prop("checked", true);
     }
+    localStorage.setItem('layout-color', $(this).val());
   });
 
   // restore default to dark theme
@@ -694,16 +698,32 @@ $(function () {
   //start up class add
 
   //add default class on body tag
-  jQuery("body").addClass("light");
-  jQuery("body").addClass("light-sidebar");
-  jQuery("body").addClass("theme-white");
+  var layoutColor = localStorage.getItem('layout-color') || "1";
+  var sidebarColor = localStorage.getItem('sidebar-color') || "1";
+  var themeColor = localStorage.getItem('theme-color') || "white";
+
+  if (layoutColor == "1") {
+    jQuery("body").addClass("light");
+    $(".select-layout[value|='1']").prop("checked", true);
+  } else {
+    jQuery("body").addClass("dark");
+    $(".select-layout[value|='2']").prop("checked", true);
+  }
+
+  if (sidebarColor == "1") {
+    jQuery("body").addClass("light-sidebar");
+    $(".select-sidebar[value|='1']").prop("checked", true);
+  } else {
+    jQuery("body").addClass("dark-sidebar");
+    $(".select-sidebar[value|='2']").prop("checked", true);
+  }
+
+  jQuery("body").addClass("theme-" + themeColor);
+
   // set theme default color
   $(".choose-theme li").removeClass("active");
-  $(".choose-theme li[title|='white']").addClass("active");
-  //set default dark or light layout(1=light, 2=dark)
-  $(".select-layout[value|='1']").prop("checked", true);
-  //set default dark or light sidebar(1=light, 2=dark)
-  $(".select-sidebar[value|='1']").prop("checked", true);
+  $(".choose-theme li[title|='" + themeColor + "']").addClass("active");
+
   // sticky header default set to true
   $("#sticky_header_setting").prop("checked", true);
 });
