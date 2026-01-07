@@ -9,6 +9,9 @@ public class RemoveNotificationCommandHandler(IGenericRepository<Notification> _
     public async Task Handle(RemoveNotificationCommand request, CancellationToken cancellationToken)
     {
         var value = await _repository.GetByIdAsync(request.Id);
-        _repository.Remove(value);
+        if (value != null)
+        {
+            _repository.Remove(value);
+        }
     }
 }

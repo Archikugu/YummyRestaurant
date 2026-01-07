@@ -8,7 +8,7 @@ namespace YummyRestaurant.Persistence.Repositories;
 
 public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 {
-    private readonly YummyRestaurantContext _context;
+    protected readonly YummyRestaurantContext _context;
     private readonly DbSet<T> _dbSet;
 
     public GenericRepository(YummyRestaurantContext context)

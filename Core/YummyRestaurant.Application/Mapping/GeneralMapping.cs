@@ -12,7 +12,7 @@ using YummyRestaurant.Application.DTOs.TestimonialDTOs;
 using YummyRestaurant.Application.DTOs.RestaurantEventDTOs;
 using YummyRestaurant.Application.Features.RestaurantEvents.Commands.CreateRestaurantEvent;
 using YummyRestaurant.Application.Features.RestaurantEvents.Commands.UpdateRestaurantEvent;
-using YummyRestaurant.Application.Features.RestaurantEvents.Commands.UpdateRestaurantEvent;
+
 using YummyRestaurant.Application.DTOs.NotificationDTOs;
 using YummyRestaurant.Domain.Entities;
 
@@ -48,12 +48,12 @@ public class GeneralMapping : Profile
         CreateMap<Message, GetByIdMessageDto>().ReverseMap();
 
         CreateMap<Product, ResultProductDto>()
-            .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
+            .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : null))
             .ReverseMap();
         CreateMap<Product, CreateProductDto>().ReverseMap();
         CreateMap<Product, UpdateProductDto>().ReverseMap();
         CreateMap<Product, GetByIdProductDto>()
-            .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
+            .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : null))
             .ReverseMap();
 
         CreateMap<Booking, ResultBookingDto>().ReverseMap();

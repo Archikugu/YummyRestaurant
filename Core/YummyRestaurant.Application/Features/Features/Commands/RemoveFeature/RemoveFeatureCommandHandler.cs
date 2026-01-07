@@ -16,6 +16,9 @@ public class RemoveFeatureCommandHandler : IRequestHandler<RemoveFeatureCommand>
     public async Task Handle(RemoveFeatureCommand request, CancellationToken cancellationToken)
     {
         var value = await _repository.GetByIdAsync(request.Id);
-        _repository.Remove(value);
+        if (value != null)
+        {
+            _repository.Remove(value);
+        }
     }
 }

@@ -16,6 +16,9 @@ public class RemoveContactCommandHandler : IRequestHandler<RemoveContactCommand>
     public async Task Handle(RemoveContactCommand request, CancellationToken cancellationToken)
     {
         var value = await _repository.GetByIdAsync(request.Id);
-        _repository.Remove(value);
+        if (value != null)
+        {
+            _repository.Remove(value);
+        }
     }
 }

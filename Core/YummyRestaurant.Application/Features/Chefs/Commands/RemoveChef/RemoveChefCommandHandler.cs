@@ -16,6 +16,9 @@ public class RemoveChefCommandHandler : IRequestHandler<RemoveChefCommand>
     public async Task Handle(RemoveChefCommand request, CancellationToken cancellationToken)
     {
         var value = await _repository.GetByIdAsync(request.Id);
-        _repository.Remove(value);
+        if (value != null)
+        {
+            _repository.Remove(value);
+        }
     }
 }

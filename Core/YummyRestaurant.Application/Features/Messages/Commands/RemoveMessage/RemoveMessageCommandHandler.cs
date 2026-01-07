@@ -16,6 +16,9 @@ public class RemoveMessageCommandHandler : IRequestHandler<RemoveMessageCommand>
     public async Task Handle(RemoveMessageCommand request, CancellationToken cancellationToken)
     {
         var value = await _repository.GetByIdAsync(request.Id);
-        _repository.Remove(value);
+        if (value != null)
+        {
+            _repository.Remove(value);
+        }
     }
 }

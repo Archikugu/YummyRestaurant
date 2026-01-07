@@ -3,11 +3,8 @@ using YummyRestaurant.Domain.Entities;
 
 namespace YummyRestaurant.Persistence.Context;
 
-public class YummyRestaurantContext : DbContext
+public class YummyRestaurantContext(DbContextOptions<YummyRestaurantContext> options) : DbContext(options)
 {
-    public YummyRestaurantContext(DbContextOptions<YummyRestaurantContext> options) : base(options)
-    {
-    }
 
     public DbSet<Category> Categories { get; set; }
     public DbSet<Product> Products { get; set; }

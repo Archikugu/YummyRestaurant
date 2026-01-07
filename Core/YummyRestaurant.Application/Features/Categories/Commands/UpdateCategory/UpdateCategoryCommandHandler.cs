@@ -1,25 +1,21 @@
-using AutoMapper;
 using MediatR;
 using YummyRestaurant.Application.Abstract;
 using YummyRestaurant.Domain.Entities;
 
 namespace YummyRestaurant.Application.Features.Categories.Commands.UpdateCategory;
 
-public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand>
+public class UpdateCategoryCommandHandler(IGenericRepository<Category> _repository) : IRequestHandler<UpdateCategoryCommand>
 {
-    private readonly IGenericRepository<Category> _repository;
-    private readonly IMapper _mapper;
-
-    public UpdateCategoryCommandHandler(IGenericRepository<Category> repository, IMapper mapper)
-    {
-        _repository = repository;
-        _mapper = mapper;
-    }
 
     public async Task Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
     {
-        var category = _mapper.Map<Category>(request.UpdateCategoryDto);
-        _repository.Update(category);
-        await Task.CompletedTask;
+        var category = await _repository.GetByIdAsync(request.UpdateCategoryDto.Id);
+        if (category != null)
+        {
+            category.Name = request.UpdateCategoryDto.Name;
+            category.Description = request.UpdateCategoryDto.Description;
+            category.IsActive = request.UpdateCategoryDto.IsActive;
+            _repository.Update(category);
+        }
     }
 }

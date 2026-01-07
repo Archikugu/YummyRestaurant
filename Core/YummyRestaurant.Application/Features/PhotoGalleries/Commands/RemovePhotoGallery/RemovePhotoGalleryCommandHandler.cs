@@ -16,6 +16,9 @@ public class RemovePhotoGalleryCommandHandler : IRequestHandler<RemovePhotoGalle
     public async Task Handle(RemovePhotoGalleryCommand request, CancellationToken cancellationToken)
     {
         var value = await _repository.GetByIdAsync(request.Id);
-        _repository.Remove(value);
+        if (value != null)
+        {
+            _repository.Remove(value);
+        }
     }
 }

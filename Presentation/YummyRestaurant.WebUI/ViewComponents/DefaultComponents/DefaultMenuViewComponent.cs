@@ -27,8 +27,8 @@ namespace YummyRestaurant.WebUI.ViewComponents.DefaultComponents
 
                 var viewModel = new MenuViewModel
                 {
-                    Categories = categories,
-                    Products = products
+                    Categories = categories ?? new(),
+                    Products = products ?? new()
                 };
 
                 return View(viewModel);
