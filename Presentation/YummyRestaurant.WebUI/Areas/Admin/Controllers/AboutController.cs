@@ -9,7 +9,7 @@ namespace YummyRestaurant.WebUI.Areas.Admin.Controllers;
 [Route("Admin/About")]
 public class AboutController(IHttpClientFactory _httpClientFactory, IConfiguration _configuration) : Controller
 {
-    private readonly string _baseUrl = _configuration["ApiSettings:BaseUrl"];
+    private readonly string _baseUrl = _configuration["ApiSettings:BaseUrl"]!;
 
     [Route("Index")]
     public async Task<IActionResult> Index()
@@ -38,7 +38,7 @@ public class AboutController(IHttpClientFactory _httpClientFactory, IConfigurati
     {
         var client = _httpClientFactory.CreateClient();
         var jsonData = JsonConvert.SerializeObject(createAboutDto);
-        StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
+        StringContent stringContent = new(jsonData, Encoding.UTF8, "application/json");
         var responseMessage = await client.PostAsync($"{_baseUrl}/api/Abouts", stringContent);
         if (responseMessage.IsSuccessStatusCode)
         {
@@ -74,13 +74,13 @@ public class AboutController(IHttpClientFactory _httpClientFactory, IConfigurati
         return View();
     }
 
-    [Route("Update/{id}")]
+    [Route("Update")]
     [HttpPost]
     public async Task<IActionResult> Update(UpdateAboutDto updateAboutDto)
     {
         var client = _httpClientFactory.CreateClient();
         var jsonData = JsonConvert.SerializeObject(updateAboutDto);
-        StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
+        StringContent stringContent = new(jsonData, Encoding.UTF8, "application/json");
         var responseMessage = await client.PutAsync($"{_baseUrl}/api/Abouts", stringContent);
         if (responseMessage.IsSuccessStatusCode)
         {

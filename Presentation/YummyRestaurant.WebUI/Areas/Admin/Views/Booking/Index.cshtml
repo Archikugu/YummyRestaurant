@@ -1,0 +1,82 @@
+@model List<YummyRestaurant.Application.DTOs.BookingDTOs.ResultBookingDto>
+@{
+    ViewData["Title"] = "Rezervasyon Listesi";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int count = 0;
+}
+
+<script src="~/Otika/assets/js/page/components-sweetalert.js"></script>
+
+<script>
+    function deleteBooking(id, name) {
+        Swal.fire({
+            title: 'Silmek istediğinize emin misiniz?',
+            text: "'" + name + "' adlı müşterinin rezervasyonunu silmek üzeresiniz. Bu işlem geri alınamaz!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'İptal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "/Admin/Booking/Delete/" + id;
+            }
+        })
+    }
+</script>
+
+<div class="row">
+    <div class="col-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Rezervasyon Listesi</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-md">
+                        <tr>
+                            <th>#</th>
+                            <th>Müşteri</th>
+                            <th>Tarih / Saat</th>
+                            <th>Kişi</th>
+                            <th>Mesaj</th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+                        @foreach (var item in Model)
+                        {
+                            count++;
+                            <tr>
+                                <td>@count</td>
+                                <td>
+                                    @item.FirstName @item.LastName<br/>
+                                    <small>@item.Email</small> | <small>@item.PhoneNumber</small>
+                                </td>
+                                <td>@item.ReservationDate.ToShortDateString() / @item.ReservationTime</td>
+                                <td>@item.PersonCount</td>
+                                <td>@(item.Message.Length > 30 ? item.Message.Substring(0, 30) + "..." : item.Message)</td>
+                                <td>@item.BookingStatus</td>
+                                <td>
+                                    <button onclick="deleteBooking(@item.Id, '@item.FirstName @item.LastName')" class="btn btn-outline-danger">Sil</button>
+                                    <a href="/Admin/Booking/Update/@item.Id" class="btn btn-outline-success">Güncelle</a>
+                                    @if (item.BookingStatus != YummyRestaurant.Domain.Enums.BookingStatus.Approved)
+                                    {
+                                        <a href="/Admin/Booking/BookingStatusApproved/@item.Id" class="btn btn-outline-info">Onayla</a>
+                                    }
+                                    @if (item.BookingStatus != YummyRestaurant.Domain.Enums.BookingStatus.Rejected && item.BookingStatus != YummyRestaurant.Domain.Enums.BookingStatus.Cancelled)
+                                    {
+                                        <a href="/Admin/Booking/BookingStatusCancelled/@item.Id" class="btn btn-outline-dark">Reddet</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+                <br />
+                <a href="/Admin/Booking/Create" class="btn btn-outline-primary" style="float: left;">Yeni Rezervasyon Ekle</a>
+                <br /><br />
+            </div>
+        </div>
+    </div>
+</div>

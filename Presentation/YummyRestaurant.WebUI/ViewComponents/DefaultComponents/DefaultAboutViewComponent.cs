@@ -15,7 +15,7 @@ namespace YummyRestaurant.WebUI.ViewComponents.DefaultComponents
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
                 var values = JsonConvert.DeserializeObject<List<ResultAboutDto>>(jsonData);
-                return View(values.FirstOrDefault());
+                return View(values?.FirstOrDefault());
             }
             return View();
         }

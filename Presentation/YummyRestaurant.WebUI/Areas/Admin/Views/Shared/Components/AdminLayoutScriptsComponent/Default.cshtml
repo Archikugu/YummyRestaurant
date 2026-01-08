@@ -9,3 +9,14 @@
 <!-- Custom JS File -->
 <script src="~/Otika/assets/js/custom.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+    @if (!string.IsNullOrEmpty(TempData["ToastrSuccess"]?.ToString()))
+    {
+        <text>toastr.success("@TempData["ToastrSuccess"]");</text>
+    }
+    @if (!string.IsNullOrEmpty(TempData["ToastrError"]?.ToString()))
+    {
+        <text>toastr.error("@TempData["ToastrError"]");</text>
+    }
+</script>

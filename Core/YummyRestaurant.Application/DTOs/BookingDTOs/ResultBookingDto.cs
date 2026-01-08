@@ -9,7 +9,9 @@ public class ResultBookingDto
     public required string Email { get; set; }
     public required string PhoneNumber { get; set; }
     public DateTime ReservationDate { get; set; }
+    public required string ReservationTime { get; set; }
     public byte PersonCount { get; set; }
     public required string Message { get; set; }
+    public Domain.Enums.BookingStatus BookingStatus { get; set; }
 }
 

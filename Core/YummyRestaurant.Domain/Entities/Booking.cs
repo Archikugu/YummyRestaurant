@@ -13,4 +13,5 @@ public class Booking : BaseEntity
     public required string ReservationTime { get; set; }
     public byte PersonCount { get; set; }
     public required string Message { get; set; }
+    public Enums.BookingStatus BookingStatus { get; set; } = Enums.BookingStatus.Pending;
 }

@@ -7,6 +7,8 @@ using YummyRestaurant.Application.Features.Bookings.Commands.RemoveBooking;
 using YummyRestaurant.Application.Features.Bookings.Commands.UpdateBooking;
 using YummyRestaurant.Application.Features.Bookings.Queries.GetBookingById;
 using YummyRestaurant.Application.Features.Bookings.Queries.GetBookingList;
+using YummyRestaurant.Application.Features.Bookings.Commands.BookingApprove;
+using YummyRestaurant.Application.Features.Bookings.Commands.BookingReject;
 
 namespace YummyRestaurant.API.Controllers;
 
@@ -60,5 +62,18 @@ public class BookingsController(IMediator _mediator, IValidator<CreateBookingDto
 
         await _mediator.Send(new UpdateBookingCommand(updateBookingDto));
         return Ok("Booking successfully updated");
+    }
+    [HttpGet("BookingStatusApproved/{id}")]
+    public async Task<IActionResult> BookingStatusApproved(int id)
+    {
+        await _mediator.Send(new BookingApproveCommand(id));
+        return Ok("Reszervasyon Açıklaması 'Onaylandı' Olarak Değiştirildi");
+    }
+
+    [HttpGet("BookingStatusCancelled/{id}")]
+    public async Task<IActionResult> BookingStatusCancelled(int id)
+    {
+        await _mediator.Send(new BookingRejectCommand(id));
+        return Ok("Reszervasyon Açıklaması 'İptal Edildi' Olarak Değiştirildi");
     }
 }

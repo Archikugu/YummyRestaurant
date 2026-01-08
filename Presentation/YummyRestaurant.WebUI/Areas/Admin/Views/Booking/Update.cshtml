@@ -1,0 +1,60 @@
+@model YummyRestaurant.Application.DTOs.BookingDTOs.UpdateBookingDto
+@{
+    ViewData["Title"] = "Rezervasyon Güncelle";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Rezervasyon Güncelle</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label>Müşteri Adı</label>
+                            <input type="text" asp-for="FirstName" class="form-control" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Müşteri Soyadı</label>
+                            <input type="text" asp-for="LastName" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label>E-Posta</label>
+                            <input type="email" asp-for="Email" class="form-control" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Telefon</label>
+                            <input type="text" asp-for="PhoneNumber" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label>Tarih</label>
+                            <input type="date" asp-for="ReservationDate" class="form-control" value="@Model.ReservationDate.ToString("yyyy-MM-dd")" />
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Saat</label>
+                            <input type="text" asp-for="ReservationTime" class="form-control" />
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Kişi Sayısı</label>
+                            <input type="number" asp-for="PersonCount" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Mesaj</label>
+                        <textarea asp-for="Message" class="form-control" rows="4" style="height:100px"></textarea>
+                    </div>
+                    <button class="btn btn-outline-success"><i class="fas fa-sync-alt"></i> Güncelle</button>
+                    <a href="/Admin/Booking/Index" class="btn btn-outline-secondary">İptal</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

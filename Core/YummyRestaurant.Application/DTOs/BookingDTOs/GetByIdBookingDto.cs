@@ -11,5 +11,6 @@ public class GetByIdBookingDto
     public required string ReservationTime { get; set; }
     public byte PersonCount { get; set; }
     public required string Message { get; set; }
+    public Domain.Enums.BookingStatus BookingStatus { get; set; }
 }
 

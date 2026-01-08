@@ -14,3 +14,15 @@
 
 <!-- Main JS File -->
 <script src="~/Yummy/assets/js/main.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+    @if (!string.IsNullOrEmpty(TempData["ToastrSuccess"]?.ToString()))
+    {
+        <text>toastr.success("@TempData["ToastrSuccess"]");</text>
+    }
+    @if (!string.IsNullOrEmpty(TempData["ToastrError"]?.ToString()))
+    {
+        <text>toastr.error("@TempData["ToastrError"]");</text>
+    }
+</script>
