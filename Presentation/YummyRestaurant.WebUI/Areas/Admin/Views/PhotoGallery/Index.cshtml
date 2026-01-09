@@ -1,0 +1,50 @@
+@model List<YummyRestaurant.Application.DTOs.PhotoGalleryDTOs.ResultPhotoGalleryDto>
+@{
+    ViewData["Title"] = "Fotoğraf Galerisi";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section class="section">
+    <div class="row">
+         <div class="col-12 mb-4">
+               <a href="/Admin/PhotoGallery/Create" class="btn btn-primary float-right"><i class="fas fa-plus"></i> Yeni Fotoğraf Yükle</a>
+        </div>
+    </div>
+    
+     <div class="section-body">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="bootstrap snippet">
+                            <section id="portfolio" class="gray-bg padding-top-bottom">
+                                <div class="projects-container scrollimation in">
+                                    <div class="row">
+                                        @foreach(var item in Model)
+                                        {
+                                            <article class="col-md-4 col-sm-6 portfolio-item">
+                                                <div class="portfolio-thumb in">
+                                                    <a href="#" class="main-link">
+                                                        <img class="img-responsive img-center" src="@item.ImageUrl" alt="@item.Title" style="width: 100%; height: 250px; object-fit: cover; border-radius: 8px;">
+                                                        <span class="project-title" style="font-size: 1.2rem; font-weight: bold; background: rgba(0,0,0,0.6); padding: 5px 10px; border-radius: 4px;">@item.Title</span>
+                                                        <span class="overlay-mask"></span>
+                                                    </a>
+                                                    <a class="enlarge centered" href="/Admin/PhotoGallery/Update/@item.Id" title="Düzenle">
+                                                        <i class="fas fa-edit fa-fw"></i>
+                                                    </a>
+                                                    <a class="link" href="/Admin/PhotoGallery/Delete/@item.Id" title="Sil">
+                                                        <i class="fas fa-trash fa-fw"></i>
+                                                    </a>
+                                                </div>
+                                            </article>
+                                        }
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

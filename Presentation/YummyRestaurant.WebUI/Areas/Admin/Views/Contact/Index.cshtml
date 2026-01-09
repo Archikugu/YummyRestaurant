@@ -1,0 +1,50 @@
+@model List<YummyRestaurant.Application.DTOs.ContactDTOs.ResultContactDto>
+@{
+    ViewData["Title"] = "İletişim Bilgileri";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section class="section">
+    <div class="section-header">
+        <h1>İletişim Bilgileri</h1>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-12 col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>İletişim Listesi</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-md">
+                            <tr>
+                                <th>#</th>
+                                <th>Konum</th>
+                                <th>Telefon</th>
+                                <th>Email</th>
+                                <th>Çalışma Saatleri</th>
+                                <th>Sil</th>
+                                <th>Güncelle</th>
+                            </tr>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Id</td>
+                                    <td>@item.Location</td>
+                                    <td>@item.PhoneNumber</td>
+                                    <td>@item.Email</td>
+                                    <td>@item.OpeningHours</td>
+                                    <td><a href="/Admin/Contact/Delete/@item.Id" class="btn btn-outline-danger">Sil</a></td>
+                                    <td><a href="/Admin/Contact/Update/@item.Id" class="btn btn-outline-success">Güncelle</a></td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer text-right">
+                    <a href="/Admin/Contact/Create" class="btn btn-primary">Yeni İletişim Bilgisi Ekle</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

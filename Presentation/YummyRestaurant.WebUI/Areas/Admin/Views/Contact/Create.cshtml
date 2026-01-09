@@ -1,0 +1,45 @@
+@model YummyRestaurant.Application.DTOs.ContactDTOs.CreateContactDto
+@{
+    ViewData["Title"] = "Yeni İletişim Bilgisi Ekle";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section class="section">
+    <div class="section-header">
+        <h1>Yeni İletişim Bilgisi Ekle</h1>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-12 col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>İletişim Bilgisi Formu</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div class="form-group">
+                            <label>Konum (Adres)</label>
+                            <input type="text" class="form-control" asp-for="Location" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Telefon Numarası</label>
+                            <input type="text" class="form-control" asp-for="PhoneNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Adresi</label>
+                            <input type="email" class="form-control" asp-for="Email" required>
+                        </div>
+                         <div class="form-group">
+                            <label>Çalışma Saatleri</label>
+                            <input type="text" class="form-control" asp-for="OpeningHours" required>
+                        </div>
+                         <div class="form-group">
+                            <label>Harita URL (Embed Link)</label>
+                            <input type="text" class="form-control" asp-for="MapUrl" required>
+                        </div>
+                        <button class="btn btn-primary">Kaydet</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
