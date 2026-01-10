@@ -1,0 +1,30 @@
+<form action="/Home/SendMessage" method="post" data-aos="fade-up" data-aos-delay="600">
+    <div class="row gy-4">
+
+        <div class="col-md-6">
+            <input type="text" name="FirstName" class="form-control" placeholder="Adınız" required="">
+        </div>
+        <div class="col-md-6">
+            <input type="text" name="LastName" class="form-control" placeholder="Soyadınız" required="">
+        </div>
+
+        <div class="col-md-12 ">
+            <input type="email" class="form-control" name="Email" placeholder="E-Posta Adresiniz" required="">
+        </div>
+
+        <div class="col-md-12">
+            <input type="text" class="form-control" name="Subject" placeholder="Konu" required="">
+        </div>
+
+        <div class="col-md-12">
+            <textarea class="form-control" name="MessageContent" rows="6" placeholder="Mesajınız" required=""></textarea>
+        </div>
+
+        <div class="col-md-12 text-center">
+
+
+            <button type="submit" class="btn btn-danger rounded-pill py-2 px-4">Mesaj Gönder</button>
+        </div>
+
+    </div>
+</form><!-- End Contact Form -->

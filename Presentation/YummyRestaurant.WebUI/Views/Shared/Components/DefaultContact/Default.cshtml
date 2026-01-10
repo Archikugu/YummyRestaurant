@@ -62,35 +62,9 @@
         </div>
         }
 
-        <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="600">
-            <div class="row gy-4">
-
-                <div class="col-md-6">
-                    <input type="text" name="name" class="form-control" placeholder="Adınız" required="">
-                </div>
-
-                <div class="col-md-6 ">
-                    <input type="email" class="form-control" name="email" placeholder="E-Posta Adresiniz" required="">
-                </div>
-
-                <div class="col-md-12">
-                    <input type="text" class="form-control" name="subject" placeholder="Konu" required="">
-                </div>
-
-                <div class="col-md-12">
-                    <textarea class="form-control" name="message" rows="6" placeholder="Mesajınız" required=""></textarea>
-                </div>
-
-                <div class="col-md-12 text-center">
-                    <div class="loading">Yükleniyor</div>
-                    <div class="error-message"></div>
-                    <div class="sent-message">Mesajınız gönderildi. Teşekkürler!</div>
-
-                    <button type="submit">Mesaj Gönder</button>
-                </div>
-
-            </div>
-        </form><!-- End Contact Form -->
+        <div class="mt-5">
+            @await Component.InvokeAsync("DefaultMessage")
+        </div>
 
     </div>
 

@@ -37,6 +37,13 @@ public class MessagesController(IMediator _mediator, IValidator<CreateMessageDto
         return Ok(values);
     }
 
+    [HttpGet("MessageStatusRead/{id}")]
+    public async Task<IActionResult> MessageStatusRead(int id)
+    {
+        await _mediator.Send(new YummyRestaurant.Application.Features.Messages.Commands.MessageReview.MessageReviewCommand(id));
+        return Ok("Message marked as read");
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateMessageDto createMessageDto)
     {

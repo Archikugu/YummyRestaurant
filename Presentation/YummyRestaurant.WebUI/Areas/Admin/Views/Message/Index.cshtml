@@ -1,0 +1,117 @@
+@model List<YummyRestaurant.Application.DTOs.MessageDTOs.ResultMessageDto>
+@{
+    ViewData["Title"] = "Mesajlar";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section class="section">
+    <div class="section-header">
+        <h1>Gelen Mesajlar</h1>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-12 col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Mesaj Listesi</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-md">
+                            <tr>
+                                <th>#</th>
+                                <th>Gönderen</th>
+                                <th>Email</th>
+                                <th>Konu</th>
+                                <th>Mesajı Oku</th>
+                                <th>Durum</th>
+                                <th>Sil</th>
+                            </tr>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Id</td>
+                                    <td>@item.FirstName @item.LastName</td>
+                                    <td>@item.Email</td>
+                                    <td>@item.Subject</td>
+                                    <td>
+                                        <button class="btn btn-info btn-sm" onclick="openMessageModal(@item.Id)">
+                                            Mesajı Aç
+                                        </button>
+                                        <!-- Hidden fields to store data safe from JS escaping issues -->
+                                        <input type="hidden" id="sender_@item.Id" value="@item.FirstName @item.LastName" />
+                                        <input type="hidden" id="email_@item.Id" value="@item.Email" />
+                                        <input type="hidden" id="subject_@item.Id" value="@item.Subject" />
+                                        <input type="hidden" id="content_@item.Id" value="@item.MessageContent" />
+                                    </td>
+                                    <td id="status_@item.Id">@(item.IsRead ? "Okundu" : "Okunmadı")</td>
+                                    <td><a href="/Admin/Message/Delete/@item.Id" class="btn btn-outline-danger">Sil</a></td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Message Modal moved to end of body to prevent z-index issues -->
+<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="messageModalLabel">Mesaj Detayı</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label><strong>Gönderen:</strong></label>
+                    <p id="modalSender"></p>
+                </div>
+                <div class="form-group">
+                    <label><strong>Email:</strong></label>
+                    <p id="modalEmail"></p>
+                </div>
+                <div class="form-group">
+                    <label><strong>Konu:</strong></label>
+                    <p id="modalSubject"></p>
+                </div>
+                <div class="form-group">
+                    <label><strong>Mesaj:</strong></label>
+                    <div class="alert alert-light border" id="modalContent" style="white-space: pre-wrap;"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openMessageModal(id) {
+        var sender = document.getElementById('sender_' + id).value;
+        var email = document.getElementById('email_' + id).value;
+        var subject = document.getElementById('subject_' + id).value;
+        var content = document.getElementById('content_' + id).value;
+
+        document.getElementById('modalSender').innerText = sender;
+        document.getElementById('modalEmail').innerText = email;
+        document.getElementById('modalSubject').innerText = subject;
+        document.getElementById('modalContent').innerText = content;
+        
+        // Move modal to body to prevent backdrop z-index issues
+        $('#messageModal').appendTo("body");
+
+        // Show modal
+        $('#messageModal').modal('show');
+
+        // Mark as read via AJAX
+        $.get("/Admin/Message/MessageStatusRead/" + id, function(data) {
+             console.log("Message marked as read");
+             // Turn status to 'Okundu' instantly
+             document.getElementById('status_' + id).innerText = "Okundu";
+        });
+    }
+</script>

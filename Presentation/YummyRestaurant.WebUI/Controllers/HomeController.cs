@@ -33,6 +33,23 @@ public class HomeController(IHttpClientFactory _httpClientFactory, IConfiguratio
         return RedirectToAction("Index");
     }
 
+    [HttpPost]
+    public async Task<IActionResult> SendMessage(YummyRestaurant.Application.DTOs.MessageDTOs.CreateMessageDto createMessageDto)
+    {
+        var client = _httpClientFactory.CreateClient();
+        var jsonData = JsonConvert.SerializeObject(createMessageDto);
+        StringContent stringContent = new(jsonData, Encoding.UTF8, "application/json");
+        var responseMessage = await client.PostAsync($"{_baseUrl}/api/Messages", stringContent);
+        
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            TempData["ToastrSuccess"] = "Mesajınız başarıyla gönderildi! En kısa sürede dönüş yapacağız.";
+            return RedirectToAction("Index");
+        }
+        TempData["ToastrError"] = "Mesaj gönderilirken bir hata oluştu.";
+        return RedirectToAction("Index");
+    }
+
     public IActionResult Privacy()
     {
         return View();
