@@ -12,6 +12,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using YummyRestaurant.Application.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using YummyRestaurant.Application.Extensions;
 
 namespace YummyRestaurant.API;
 
@@ -30,9 +31,6 @@ public class Program
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
-        // FluentValidation
-        builder.Services.AddValidatorsFromAssemblyContaining<YummyRestaurant.Application.Validators.CategoryValidators.CreateCategoryValidator>();
-
         // Database Context
         builder.Services.AddDbContext<YummyRestaurantContext>(options =>
         {
@@ -44,6 +42,7 @@ public class Program
         builder.Services.AddScoped<IProductRepository, ProductRepository>();
         builder.Services.AddScoped<IRestaurantEventRepository, RestaurantEventRepository>();
         builder.Services.AddScoped<IJwtService, YummyRestaurant.Persistence.Services.JwtService>();
+        builder.Services.AddScoped<ITransactionService, YummyRestaurant.Persistence.Services.TransactionService>();
 
         // Identity
         builder.Services.AddIdentity<YummyRestaurant.Domain.Entities.AppUser, YummyRestaurant.Domain.Entities.AppRole>()
@@ -71,12 +70,10 @@ public class Program
                 ValidAudience = builder.Configuration["JwtSettings:Audience"],
                 IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(key))
             };
-        });  
-        // AutoMapper
-        builder.Services.AddAutoMapper(cfg => cfg.AddProfile<GeneralMapping>());
+        });
 
-        // MediatR
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(YummyRestaurant.Application.Mapping.GeneralMapping).Assembly));
+        // Application Services (AOP, Mediator, Validators, AutoMapper)
+        builder.Services.AddApplicationServices();
 
         var app = builder.Build();
 
