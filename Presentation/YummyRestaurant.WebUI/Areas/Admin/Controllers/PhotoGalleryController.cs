@@ -5,9 +5,8 @@ using YummyRestaurant.Application.DTOs.PhotoGalleryDTOs;
 
 namespace YummyRestaurant.WebUI.Areas.Admin.Controllers;
 
-[Area("Admin")]
 [Route("Admin/PhotoGallery")]
-public class PhotoGalleryController(IHttpClientFactory _httpClientFactory, IConfiguration _configuration) : Controller
+public class PhotoGalleryController(IHttpClientFactory _httpClientFactory, IConfiguration _configuration) : AdminBaseController
 {
     private readonly string _baseUrl = _configuration["ApiSettings:BaseUrl"]!;
 

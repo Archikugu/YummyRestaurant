@@ -5,9 +5,8 @@ using YummyRestaurant.Application.DTOs.MessageDTOs;
 
 namespace YummyRestaurant.WebUI.Areas.Admin.Controllers;
 
-[Area("Admin")]
 [Route("Admin/Message")]
-public class MessageController(IHttpClientFactory _httpClientFactory, IConfiguration _configuration) : Controller
+public class MessageController(IHttpClientFactory _httpClientFactory, IConfiguration _configuration) : AdminBaseController
 {
     private readonly string _baseUrl = _configuration["ApiSettings:BaseUrl"]!;
 

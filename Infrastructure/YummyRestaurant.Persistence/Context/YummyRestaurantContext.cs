@@ -3,7 +3,9 @@ using YummyRestaurant.Domain.Entities;
 
 namespace YummyRestaurant.Persistence.Context;
 
-public class YummyRestaurantContext(DbContextOptions<YummyRestaurantContext> options) : DbContext(options)
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
+public class YummyRestaurantContext(DbContextOptions<YummyRestaurantContext> options) : IdentityDbContext<AppUser, AppRole, int>(options)
 {
 
     public DbSet<Category> Categories { get; set; }

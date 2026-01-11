@@ -6,9 +6,8 @@ using YummyRestaurant.Application.DTOs.ContactDTOs;
 
 namespace YummyRestaurant.WebUI.Areas.Admin.Controllers;
 
-[Area("Admin")]
 [Route("Admin/Contact")]
-public class ContactController(IHttpClientFactory _httpClientFactory, IConfiguration _configuration) : Controller
+public class ContactController(IHttpClientFactory _httpClientFactory, IConfiguration _configuration) : AdminBaseController
 {
     private readonly string _baseUrl = _configuration["ApiSettings:BaseUrl"]!;
 

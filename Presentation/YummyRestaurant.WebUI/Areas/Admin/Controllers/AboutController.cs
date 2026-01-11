@@ -5,9 +5,8 @@ using YummyRestaurant.Application.DTOs.AboutDTOs;
 
 namespace YummyRestaurant.WebUI.Areas.Admin.Controllers;
 
-[Area("Admin")]
 [Route("Admin/About")]
-public class AboutController(IHttpClientFactory _httpClientFactory, IConfiguration _configuration) : Controller
+public class AboutController(IHttpClientFactory _httpClientFactory, IConfiguration _configuration) : AdminBaseController
 {
     private readonly string _baseUrl = _configuration["ApiSettings:BaseUrl"]!;
 

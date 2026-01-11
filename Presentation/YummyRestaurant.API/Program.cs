@@ -10,6 +10,8 @@ using FluentValidation;
 using YummyRestaurant.Application.Mapping;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using YummyRestaurant.Application.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace YummyRestaurant.API;
 
@@ -41,8 +43,35 @@ public class Program
         builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         builder.Services.AddScoped<IProductRepository, ProductRepository>();
         builder.Services.AddScoped<IRestaurantEventRepository, RestaurantEventRepository>();
+        builder.Services.AddScoped<IJwtService, YummyRestaurant.Persistence.Services.JwtService>();
 
-        
+        // Identity
+        builder.Services.AddIdentity<YummyRestaurant.Domain.Entities.AppUser, YummyRestaurant.Domain.Entities.AppRole>()
+            .AddEntityFrameworkStores<YummyRestaurantContext>()
+            .AddDefaultTokenProviders();
+
+        // JWT Authentication
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            var key = builder.Configuration["JwtSettings:Key"];
+            if (string.IsNullOrEmpty(key)) throw new InvalidOperationException("JwtSettings:Key is missing");
+
+            options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+                ValidAudience = builder.Configuration["JwtSettings:Audience"],
+                IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(key))
+            };
+        });  
         // AutoMapper
         builder.Services.AddAutoMapper(cfg => cfg.AddProfile<GeneralMapping>());
 
@@ -60,6 +89,7 @@ public class Program
 
         app.UseHttpsRedirection();
 
+        app.UseAuthentication();
         app.UseAuthorization();
         
         app.MapControllers();

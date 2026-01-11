@@ -5,9 +5,8 @@ using YummyRestaurant.Application.DTOs.TestimonialDTOs;
 
 namespace YummyRestaurant.WebUI.Areas.Admin.Controllers;
 
-[Area("Admin")]
 [Route("Admin/[controller]")]
-public class TestimonialController(IHttpClientFactory _httpClientFactory, IConfiguration _configuration) : Controller
+public class TestimonialController(IHttpClientFactory _httpClientFactory, IConfiguration _configuration) : AdminBaseController
 {
     private readonly string _baseUrl = _configuration["ApiSettings:BaseUrl"]!;
 

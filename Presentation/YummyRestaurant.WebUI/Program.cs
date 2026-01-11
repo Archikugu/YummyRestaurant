@@ -4,6 +4,13 @@ using YummyRestaurant.Application.Abstract;
 using YummyRestaurant.Persistence.Context;
 using YummyRestaurant.Persistence.Repositories;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using YummyRestaurant.Domain.Entities;
+using YummyRestaurant.Application.Interfaces;
+using YummyRestaurant.Persistence.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +24,39 @@ builder.Services.AddDbContext<YummyRestaurantContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-// Dependency Injection
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+
+builder.Services.AddIdentity<AppUser, AppRole>()
+    .AddEntityFrameworkStores<YummyRestaurantContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication(options =>
+{
+    // options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; // Removed to allow Cookies as default for MVC
+    // options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddCookie(options => 
+{
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+})
+.AddJwtBearer(options =>
+{
+    var key = builder.Configuration["JwtSettings:Key"];
+    if (string.IsNullOrEmpty(key)) throw new InvalidOperationException("JwtSettings:Key is missing");
+
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+    };
+});
 
 
 // AutoMapper
@@ -36,9 +73,17 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await YummyRestaurant.Persistence.SeedData.DbInitializer.Initialize(services);
+}
 
 app.MapStaticAssets();
 
