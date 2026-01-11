@@ -28,6 +28,9 @@ public class Program
         {
             options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
         });
+        // Distributed Cache (In-Memory)
+        builder.Services.AddDistributedMemoryCache();
+
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
