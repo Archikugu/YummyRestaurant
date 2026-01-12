@@ -1,0 +1,138 @@
+@model YummyRestaurant.WebUI.Areas.Admin.Models.ProfileViewModel
+@{
+    ViewData["Title"] = "Profilim";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section class="section">
+    <div class="section-header">
+        <h1>Profil Ayarları</h1>
+        <div class="section-header-breadcrumb">
+             <div class="breadcrumb-item active"><a href="/Admin/Dashboard/Index">Dashboard</a></div>
+             <div class="breadcrumb-item">Profilim</div>
+        </div>
+    </div>
+
+    <div class="section-body">
+        <h2 class="section-title">Merhaba, @Model.Name!</h2>
+        <p class="section-lead">
+            Kişisel bilgilerinizi ve şifrenizi buradan yönetebilirsiniz.
+        </p>
+
+        <div class="row mt-sm-4">
+             <!-- Left Column: User Card -->
+             <div class="col-12 col-md-12 col-lg-5">
+                <div class="card profile-widget">
+                    <div class="profile-widget-header">
+                        <img alt="image" src="~/Otika/assets/img/user.png" class="rounded-circle profile-widget-picture">
+                        <div class="profile-widget-items">
+                            <div class="profile-widget-item">
+                                <div class="profile-widget-item-label">Durum</div>
+                                <div class="profile-widget-item-value">Admin</div>
+                            </div>
+                            <div class="profile-widget-item">
+                                <div class="profile-widget-item-label">Onaylı</div>
+                                <div class="profile-widget-item-value"><i class="fas fa-check-circle text-success"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-widget-description">
+                        <div class="profile-widget-name">@Model.Name @Model.Surname <div class="text-muted d-inline font-weight-normal"><div class="slash"></div> Yönetici</div></div>
+                        Hesap güvenliğiniz için şifrenizi periyodik olarak güncellemeniz önerilir.
+                    </div>
+                    <div class="card-footer text-center">
+                        <div class="font-weight-bold mb-2">Bizi Takip Edin</div>
+                        <a href="#" class="btn btn-social-icon btn-facebook mr-1">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="btn btn-social-icon btn-twitter mr-1">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="btn btn-social-icon btn-github mr-1">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" class="btn btn-social-icon btn-instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Edit Form -->
+             <div class="col-12 col-md-12 col-lg-7">
+                <div class="card">
+                    <form method="post" class="needs-validation" novalidate="">
+                        <div class="card-header">
+                            <h4>Bilgileri Düzenle</h4>
+                        </div>
+                        <div class="card-body">
+                             @if (TempData["SuccessMessage"] != null)
+                             {
+                                 <div class="alert alert-success">
+                                     @TempData["SuccessMessage"]
+                                 </div>
+                             }
+                             @if (!ViewData.ModelState.IsValid)
+                             {
+                                 <div class="alert alert-danger">
+                                     <div asp-validation-summary="All"></div>
+                                 </div>
+                             }
+
+                            <div class="row">
+                                <div class="form-group col-md-6 col-12">
+                                    <label>Ad</label>
+                                    <input type="text" class="form-control" asp-for="Name" required="">
+                                    <div class="invalid-feedback">
+                                        Lütfen adınızı giriniz
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 col-12">
+                                    <label>Soyad</label>
+                                    <input type="text" class="form-control" asp-for="Surname" required="">
+                                    <div class="invalid-feedback">
+                                        Lütfen soyadınızı giriniz
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12 col-12">
+                                    <label>Email</label>
+                                    <input type="email" class="form-control" asp-for="Email" required="">
+                                    <div class="invalid-feedback">
+                                        Lütfen email adresinizi giriniz
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <hr />
+                            <h5 class="mb-3 text-muted">Güvenlik</h5>
+
+                             <div class="row">
+                                <div class="form-group col-md-12 col-12">
+                                    <label>Mevcut Şifre</label>
+                                    <input type="password" class="form-control" asp-for="CurrentPassword">
+                                    <small class="form-text text-muted">Bilgilerinizi güncellemek veya şifre değiştirmek için mevcut şifreniz gerekebilir.</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 col-12">
+                                    <label>Yeni Şifre</label>
+                                    <input type="password" class="form-control" asp-for="NewPassword">
+                                </div>
+                                <div class="form-group col-md-6 col-12">
+                                    <label>Yeni Şifre Tekrar</label>
+                                    <input type="password" class="form-control" asp-for="ConfirmNewPassword">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="card-footer text-right">
+                            <button class="btn btn-primary">Değişiklikleri Kaydet</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
